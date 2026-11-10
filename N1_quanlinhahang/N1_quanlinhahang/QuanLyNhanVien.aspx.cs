@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI.WebControls;
@@ -18,7 +18,7 @@ namespace N1_quanlinhahang
                 return;
             }
 
-            // BẢO MẬT TUYỆT ĐỐI: Chỉ duy nhất TK001 (Admin) mới được truy cập trang này
+            // BẢO MẬT TUYỆT ĐỐI: Chỉ duy nhất TK001 mới được truy cập trang này
             string taiKhoanHienTai = Session["TaiKhoan"]?.ToString() ?? "";
             if (!taiKhoanHienTai.Equals("TK001", StringComparison.OrdinalIgnoreCase))
             {
@@ -48,7 +48,6 @@ namespace N1_quanlinhahang
             }
         }
 
-        // --- CHỨC NĂNG THÊM NHÂN VIÊN ---
         protected void btnThem_Click(object sender, EventArgs e)
         {
             string maNV = txtMaNV.Text.Trim();
@@ -80,7 +79,6 @@ namespace N1_quanlinhahang
             }
         }
 
-        // --- CHỨC NĂNG SỬA (CẬP NHẬT) NHÂN VIÊN ---
         protected void btnSua_Click(object sender, EventArgs e)
         {
             string maNV = txtMaNV.Text.Trim();
@@ -113,7 +111,6 @@ namespace N1_quanlinhahang
             }
         }
 
-        // --- CHỨC NĂNG XÓA NHÂN VIÊN ---
         protected void btnXoa_Click(object sender, EventArgs e)
         {
             string maNV = txtMaNV.Text.Trim();
@@ -138,7 +135,6 @@ namespace N1_quanlinhahang
             }
         }
 
-        // --- CHỌN DÒNG TRÊN BẢNG ĐỂ ĐƯA LÊN FORM SỬA/XÓA ---
         protected void gvNhanVien_SelectedIndexChanged(object sender, EventArgs e)
         {
             GridViewRow row = gvNhanVien.SelectedRow;
@@ -149,7 +145,7 @@ namespace N1_quanlinhahang
             txtChucVu.Text = row.Cells[5].Text.Trim();
             txtMaTK.Text = row.Cells[7].Text.Trim();
 
-            // Khóa không cho sửa Mã Nhân Viên khi đang cập nhật
+            // Khóa mã nhân viên khi sửa để tránh lỗi khóa chính
             txtMaNV.ReadOnly = true;
             lblMessage.Visible = false;
         }
