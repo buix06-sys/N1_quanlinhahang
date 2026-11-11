@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Dashboard.aspx.cs" Inherits="N1_quanlinhahang.Dashboard" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Dashboard.aspx.cs" Inherits="N1_quanlinhahang.Dashboard" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -24,6 +24,9 @@
         .custom-card:hover { transform: translateY(-3px); border-color: #ff7b00; }
         .db-badge { cursor: pointer; transition: all 0.2s; }
         .db-badge:hover { opacity: 0.85; transform: scale(1.02); }
+        .table-dark-custom { background-color: #21252b !important; color: #ffffff !important; border-color: #2c313a !important; }
+        .table-dark-custom th { background-color: #1a1d23 !important; color: #ffc107 !important; border-color: #2c313a !important; }
+        .table-dark-custom td { background-color: #21252b !important; color: #ffffff !important; border-color: #2c313a !important; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -42,7 +45,6 @@
                 </li>
 
                 <li class="menu-header mt-2">Quản trị hệ thống</li>
-                <!-- Mục Quản lý nhân viên: Tự động ẩn nếu không phải tài khoản TK001 -->
                 <li id="menuNhanVien" runat="server" class="nav-item">
                     <a class="nav-link" href="QuanLyNhanVien.aspx"><i class="fa-solid fa-id-badge"></i> Quản lý nhân viên</a>
                 </li>
@@ -52,9 +54,7 @@
                 <li class="nav-item"><a class="nav-link" href="QuanLyDonHang.aspx"><i class="fa-solid fa-receipt"></i> Đơn hàng & Hóa đơn</a></li>
                 <li class="nav-item"><a class="nav-link" href="QuanLyKho.aspx"><i class="fa-solid fa-warehouse"></i> Quản lý kho</a></li>
 
-                <li class="my-2">
-                    <hr class="text-secondary mx-3" />
-                </li>
+                <li class="my-2"><hr class="text-secondary mx-3" /></li>
 
                 <li class="nav-item mb-4">
                     <asp:LinkButton ID="btnLogout" runat="server" CssClass="nav-link text-danger" OnClick="btnLogout_Click">
@@ -66,6 +66,7 @@
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
+            <!-- TOP NAVBAR (Khôi phục hoàn toàn tính năng click xem Modal góc phải) -->
             <div class="top-navbar">
                 <span class="badge bg-warning text-dark px-3 py-2 fw-bold db-badge shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCSDL" title="Nhấp để xem chi tiết CSDL QL_NhaHang_Moi">
                     <i class="fa-solid fa-database me-1"></i> CSDL: QL_NhaHang_Moi <i class="fa-solid fa-circle-info ms-1"></i>
@@ -82,6 +83,7 @@
                 </div>
             </div>
 
+            <!-- THẺ THÔNG TIN TRẠNG THÁI -->
             <div class="row g-4 mb-4">
                 <div class="col-md-6">
                     <div class="custom-card border-start border-warning border-4 h-100" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalTrangThai">
@@ -91,12 +93,7 @@
                                 <h3 class="fw-bold mt-2 text-white">Hoạt Động Ổn Định</h3>
                                 <span class="small text-success"><i class="fa-solid fa-check-circle"></i> SQL Server sẵn sàng vận hành</span>
                             </div>
-                            <div class="text-warning fs-1">
-                                <i class="fa-solid fa-circle-nodes"></i>
-                            </div>
-                        </div>
-                        <div class="mt-3 text-warning small fw-bold">
-                            <i class="fa-solid fa-hand-pointer"></i> Nhấp để xem thông số kết nối &rarr;
+                            <div class="text-warning fs-1"><i class="fa-solid fa-circle-nodes"></i></div>
                         </div>
                     </div>
                 </div>
@@ -109,32 +106,83 @@
                                 <h3 class="fw-bold mt-2 text-white"><asp:Label ID="lblCardRole" runat="server" Text="Quản lý"></asp:Label></h3>
                                 <span class="small text-primary"><i class="fa-solid fa-shield-halved"></i> Kiểm soát truy cập hệ thống</span>
                             </div>
-                            <div class="text-primary fs-1">
-                                <i class="fa-solid fa-user-shield"></i>
-                            </div>
+                            <div class="text-primary fs-1"><i class="fa-solid fa-user-shield"></i></div>
                         </div>
-                        <div class="mt-3 text-primary small fw-bold">
-                            <i class="fa-solid fa-hand-pointer"></i> Nhấp để xem chi tiết quyền hạn &rarr;
+                    </div>
+                </div>
+            </div>
+
+            <!-- BIỂU ĐỒ TRÒN & BẢNG CHI TIẾT MÓN ĐÃ BÁN / CHƯA BÁN (Khớp hoàn toàn) -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-5">
+                    <div class="custom-card h-100">
+                        <h5 class="fw-bold mb-3 text-warning"><i class="fa-solid fa-chart-pie me-2"></i> Tỷ Lệ Món Ăn Trong Thực Đơn</h5>
+                        <p class="text-muted small">Phân bổ tổng số lượng món đã bán so với chưa bán.</p>
+                        <div style="position: relative; height: 260px; width: 100%; display: flex; justify-content: center;">
+                            <canvas id="chartMonAn"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-7">
+                    <div class="custom-card h-100">
+                        <h5 class="fw-bold mb-3 text-info"><i class="fa-solid fa-table-list me-2"></i> Bảng Chi Tiết Trạng Thái Món Ăn</h5>
+                        <p class="text-muted small">Danh sách chi tiết từng món ăn, số lượng đã bán và trạng thái hiện tại.</p>
+                        <div class="table-responsive" style="max-height: 260px; overflow-y: auto;">
+                            <asp:GridView ID="gvChiTietMonAn" runat="server" CssClass="table table-dark table-striped table-bordered table-dark-custom align-middle text-center small" AutoGenerateColumns="False">
+                                <Columns>
+                                    <asp:BoundField DataField="mamonan" HeaderText="Mã Món" />
+                                    <asp:BoundField DataField="tenmonan" HeaderText="Tên Món Ăn" ItemStyle-CssClass="text-start fw-bold" />
+                                    <asp:BoundField DataField="soluongban" HeaderText="SL Đã Bán" ItemStyle-CssClass="text-warning fw-bold" />
+                                    <asp:TemplateField HeaderText="Trạng Thái">
+                                        <ItemTemplate>
+                                            <span class='badge <%# Convert.ToInt32(Eval("soluongban")) > 0 ? "bg-success" : "bg-secondary" %>'>
+                                                <%# Convert.ToInt32(Eval("soluongban")) > 0 ? "Đã bán" : "Chưa bán" %>
+                                            </span>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TỔNG KẾT DOANH THU & GIAO DỊCH -->
+            <div class="row g-4 mb-4">
+                <div class="col-12">
+                    <div class="custom-card">
+                        <div class="row text-center g-3">
+                            <div class="col-md-4">
+                                <div class="p-3 bg-black rounded border border-secondary">
+                                    <h6 class="text-muted small text-uppercase">Tổng Số Đầu Mục Món</h6>
+                                    <h3 class="fw-bold text-warning mb-0"><asp:Label ID="lblTongMonAn" runat="server" Text="0"></asp:Label></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-black rounded border border-secondary">
+                                    <h6 class="text-muted small text-uppercase">Tổng Đơn Hàng Thành Công</h6>
+                                    <h3 class="fw-bold text-success mb-0"><asp:Label ID="lblTongDonHang" runat="server" Text="0"></asp:Label></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-black rounded border border-secondary">
+                                    <h6 class="text-muted small text-uppercase">Tổng Doanh Thu Giao Dịch</h6>
+                                    <h3 class="fw-bold text-info mb-0"><asp:Label ID="lblTongDoanhThu" runat="server" Text="0 VNĐ"></asp:Label></h3>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- MODAL CSDL -->
+        <!-- MODAL CSDL (Khôi phục chuẩn) -->
         <div class="modal fade" id="modalCSDL" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content bg-dark text-light border border-secondary shadow-lg">
                     <div class="modal-header border-secondary bg-black">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4" style="width: 45px; height: 45px;">
-                                <i class="fa-solid fa-database"></i>
-                            </div>
-                            <div>
-                                <h5 class="modal-title text-white fw-bold mb-0">Cơ Sở Dữ Liệu: QL_NhaHang_Moi</h5>
-                                <small class="text-warning">SQL Server 2012 Express (Integrated Security)</small>
-                            </div>
-                        </div>
+                        <h5 class="modal-title text-white fw-bold"><i class="fa-solid fa-database text-warning me-2"></i> Cơ Sở Dữ Liệu: QL_NhaHang_Moi</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body p-4">
@@ -158,24 +206,6 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="p-3 bg-black rounded border border-secondary h-100">
-                                    <h6 class="text-success fw-bold mb-2"><i class="fa-solid fa-table me-2"></i> Nhóm Món Ăn & Giao Dịch</h6>
-                                    <ul class="list-unstyled text-white small mb-0">
-                                        <li>• <strong>MONAN:</strong> Danh mục thực đơn, đơn giá.</li>
-                                        <li>• <strong>DONHANG & THANHTOAN:</strong> Quản lý hóa đơn.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="p-3 bg-black rounded border border-secondary h-100">
-                                    <h6 class="text-info fw-bold mb-2"><i class="fa-solid fa-table me-2"></i> Nhóm Kho Nguyên Liệu</h6>
-                                    <ul class="list-unstyled text-white small mb-0">
-                                        <li>• <strong>NGUYENLIEU:</strong> Định mức nguyên vật liệu kho.</li>
-                                        <li>• <strong>PHEUKHO:</strong> Lịch sử nhập/xuất kho.</li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer border-secondary bg-black">
@@ -190,11 +220,11 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content bg-dark text-light border border-secondary">
                     <div class="modal-header border-secondary">
-                        <h5 class="modal-title text-warning fw-bold"><i class="fa-solid fa-database"></i> Trạng Thái Kết Nối CSDL</h5>
+                        <h5 class="modal-title text-warning fw-bold"><i class="fa-solid fa-circle-nodes me-2"></i> Trạng Thái Kết Nối CSDL</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p class="text-white small">Hệ thống đang kết nối trực tiếp với instance SQL Server 2012 Express, đảm bảo tốc độ phản hồi nhanh chóng và an toàn dữ liệu tuyệt đối.</p>
+                        <p class="text-white small">Hệ thống đang kết nối trực tiếp với SQL Server, đảm bảo tốc độ phản hồi nhanh chóng và an toàn dữ liệu tuyệt đối.</p>
                     </div>
                     <div class="modal-footer border-secondary">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
@@ -208,11 +238,11 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content bg-dark text-light border border-secondary">
                     <div class="modal-header border-secondary">
-                        <h5 class="modal-title text-primary fw-bold"><i class="fa-solid fa-shield-halved"></i> Cơ Chế Phân Quyền Động</h5>
+                        <h5 class="modal-title text-primary fw-bold"><i class="fa-solid fa-shield-halved me-2"></i> Cơ Chế Phân Quyền Động</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p class="text-white small">Mô hình phân quyền dựa trên mã tài khoản (Session). Tài khoản <strong>TK001</strong> đóng vai trò quản trị cấp cao với toàn quyền điều hành, trong khi các tài khoản nhân sự khác bị giới hạn chức năng phù hợp với nghiệp vụ chuyên môn.</p>
+                        <p class="text-white small">Mô hình phân quyền dựa trên mã tài khoản (Session). Tài khoản TK001 toàn quyền quản trị, các tài khoản khác phân tách theo nghiệp vụ.</p>
                     </div>
                     <div class="modal-footer border-secondary">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
@@ -221,13 +251,13 @@
             </div>
         </div>
 
-        <!-- MODAL PROFILE -->
+        <!-- MODAL PROFILE QUẢN LÝ -->
         <div class="modal fade" id="modalProfileQuanLy" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content bg-dark text-light border border-secondary shadow-lg">
                     <div class="modal-header border-secondary bg-black">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4" style="width: 50px; height: 50px;">
+                            <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4" style="width: 45px; height: 45px;">
                                 <i class="fa-solid fa-user-tie"></i>
                             </div>
                             <div>
@@ -238,45 +268,8 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body p-4">
-                        <div class="row mb-4">
-                            <div class="col-md-6 border-end border-secondary">
-                                <h6 class="text-uppercase text-white small fw-bold mb-3"><i class="fa-solid fa-id-card me-2"></i> Thông tin phiên</h6>
-                                <p class="mb-2"><strong>Đang đăng nhập:</strong> <asp:Label ID="lblModalUser" runat="server" Text="Hoạt động"></asp:Label></p>
-                                <p class="mb-2"><strong>Bảo mật:</strong> <span class="badge bg-success">Session Secured</span></p>
-                            </div>
-                            <div class="col-md-6 ps-md-4">
-                                <h6 class="text-uppercase text-white small fw-bold mb-3"><i class="fa-solid fa-chart-line me-2"></i> Trạng thái hoạt động</h6>
-                                <div class="d-flex justify-content-between bg-black p-2 rounded mb-2 border border-secondary">
-                                    <span>Quyền hạn hệ thống:</span>
-                                    <strong class="text-warning">Đồng bộ theo CSDL</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <hr class="border-secondary my-3" />
-                        <h6 class="text-uppercase text-white small fw-bold mb-3"><i class="fa-solid fa-sitemap me-2"></i> Sơ đồ bộ phận nhà hàng</h6>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <div class="p-3 bg-black rounded border border-secondary text-center h-100">
-                                    <div class="text-warning mb-2 fs-4"><i class="fa-solid fa-users-gear"></i></div>
-                                    <h6 class="fw-bold text-white mb-1">Nhân Viên Kho</h6>
-                                    <p class="text-white small mb-2">Quản lý nguyên liệu & phiếu kho.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 bg-black rounded border border-secondary text-center h-100">
-                                    <div class="text-primary mb-2 fs-4"><i class="fa-solid fa-user-clock"></i></div>
-                                    <h6 class="fw-bold text-white mb-1">Phục Vụ / Bàn</h6>
-                                    <p class="text-white small mb-2">Xử lý đặt bàn, thực đơn món ăn.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 bg-black rounded border border-secondary text-center h-100">
-                                    <div class="text-success mb-2 fs-4"><i class="fa-solid fa-cash-register"></i></div>
-                                    <h6 class="fw-bold text-white mb-1">Thu Ngân</h6>
-                                    <p class="text-white small mb-2">Quản lý hóa đơn thanh toán.</p>
-                                </div>
-                            </div>
-                        </div>
+                        <p class="mb-2"><strong>Đang đăng nhập:</strong> <asp:Label ID="lblModalUser" runat="server" Text="Hoạt động"></asp:Label></p>
+                        <p class="mb-2"><strong>Bảo mật:</strong> <span class="badge bg-success">Session Secured</span></p>
                     </div>
                     <div class="modal-footer border-secondary bg-black">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
@@ -285,6 +278,37 @@
             </div>
         </div>
     </form>
+
+    <!-- Thư viện Chart.js & Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var daBan = <%= SoLuongDaBan %>;
+        var chuaBan = <%= SoLuongChuaBan %>;
+
+        const ctx = document.getElementById('chartMonAn').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Món Đã Được Bán', 'Món Chưa Bán'],
+                datasets: [{
+                    data: [daBan, chuaBan],
+                    backgroundColor: ['#ff7b00', '#21252b'],
+                    borderColor: ['#ffffff', '#6c757d'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#ffffff', font: { size: 12 } }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
