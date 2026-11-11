@@ -8,7 +8,6 @@ namespace N1_quanlinhahang
     {
         KetNoiCSDL db = new KetNoiCSDL();
 
-        // Biến công khai để file .aspx đọc trực tiếp vẽ biểu đồ tròn khớp tuyệt đối với bảng
         public int SoLuongDaBan = 0;
         public int SoLuongChuaBan = 0;
 
@@ -51,21 +50,18 @@ namespace N1_quanlinhahang
         {
             try
             {
-                // 1. Tổng số món ăn
                 DataTable dtMonAn = db.ExecuteQuery("SELECT COUNT(*) FROM MONAN");
                 if (dtMonAn != null && dtMonAn.Rows.Count > 0)
                 {
                     lblTongMonAn.Text = dtMonAn.Rows[0][0].ToString();
                 }
 
-                // 2. Tổng số đơn hàng
                 DataTable dtDonHang = db.ExecuteQuery("SELECT COUNT(*) FROM DONHANG");
                 if (dtDonHang != null && dtDonHang.Rows.Count > 0)
                 {
                     lblTongDonHang.Text = dtDonHang.Rows[0][0].ToString();
                 }
 
-                // 3. Tổng doanh thu
                 DataTable dtDoanhThu = db.ExecuteQuery("SELECT SUM(tongtien) FROM THANHTOAN WHERE trangthai = N'Hoàn thành' OR tinhtrang = N'Đã thanh toán'");
                 if (dtDoanhThu != null && dtDoanhThu.Rows.Count > 0 && dtDoanhThu.Rows[0][0] != DBNull.Value)
                 {
@@ -77,7 +73,6 @@ namespace N1_quanlinhahang
                     lblTongDoanhThu.Text = "0 VNĐ";
                 }
 
-                // 4. Lấy danh sách chi tiết tất cả món ăn kết hợp tổng số lượng đã bán từ CSDL
                 string queryChiTiet = @"SELECT 
                                             M.mamonan, 
                                             M.tenmonan, 
@@ -90,7 +85,6 @@ namespace N1_quanlinhahang
                 gvChiTietMonAn.DataSource = dtChiTiet;
                 gvChiTietMonAn.DataBind();
 
-                // 5. Tính tổng số lượng món đã bán và chưa bán khớp với biểu đồ tròn
                 SoLuongDaBan = 0;
                 SoLuongChuaBan = 0;
 
@@ -105,7 +99,7 @@ namespace N1_quanlinhahang
                         }
                         else
                         {
-                            SoLuongChuaBan += 1; // Đếm số lượng đầu mục món ăn chưa từng bán được
+                            SoLuongChuaBan += 1; 
                         }
                     }
                 }
