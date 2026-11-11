@@ -6,9 +6,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hệ Thống Quản Lý Nhà Hàng - N1</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <!-- FontAwesome -->
+ 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         body { background-color: #181b20; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -31,7 +30,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <!-- SIDEBAR -->
+        
         <div class="sidebar">
             <div class="brand">
                 <i class="fa-solid fa-utensils text-warning"></i>
@@ -64,9 +63,8 @@
             </ul>
         </div>
 
-        <!-- MAIN CONTENT -->
         <main class="main-content">
-            <!-- TOP NAVBAR (Khôi phục hoàn toàn tính năng click xem Modal góc phải) -->
+      
             <div class="top-navbar">
                 <span class="badge bg-warning text-dark px-3 py-2 fw-bold db-badge shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCSDL" title="Nhấp để xem chi tiết CSDL QL_NhaHang_Moi">
                     <i class="fa-solid fa-database me-1"></i> CSDL: QL_NhaHang_Moi <i class="fa-solid fa-circle-info ms-1"></i>
@@ -83,7 +81,6 @@
                 </div>
             </div>
 
-            <!-- THẺ THÔNG TIN TRẠNG THÁI -->
             <div class="row g-4 mb-4">
                 <div class="col-md-6">
                     <div class="custom-card border-start border-warning border-4 h-100" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalTrangThai">
@@ -112,7 +109,6 @@
                 </div>
             </div>
 
-            <!-- BIỂU ĐỒ TRÒN & BẢNG CHI TIẾT MÓN ĐÃ BÁN / CHƯA BÁN (Khớp hoàn toàn) -->
             <div class="row g-4 mb-4">
                 <div class="col-xl-5">
                     <div class="custom-card h-100">
@@ -148,7 +144,6 @@
                 </div>
             </div>
 
-            <!-- TỔNG KẾT DOANH THU & GIAO DỊCH -->
             <div class="row g-4 mb-4">
                 <div class="col-12">
                     <div class="custom-card">
@@ -177,7 +172,6 @@
             </div>
         </main>
 
-        <!-- MODAL CSDL (Khôi phục chuẩn) -->
         <div class="modal fade" id="modalCSDL" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content bg-dark text-light border border-secondary shadow-lg">
@@ -215,7 +209,6 @@
             </div>
         </div>
 
-        <!-- MODAL TRẠNG THÁI -->
         <div class="modal fade" id="modalTrangThai" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content bg-dark text-light border border-secondary">
@@ -233,7 +226,6 @@
             </div>
         </div>
 
-        <!-- MODAL PHÂN QUYỀN -->
         <div class="modal fade" id="modalPhanQuyen" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content bg-dark text-light border border-secondary">
@@ -251,7 +243,6 @@
             </div>
         </div>
 
-        <!-- MODAL PROFILE QUẢN LÝ -->
         <div class="modal fade" id="modalProfileQuanLy" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content bg-dark text-light border border-secondary shadow-lg">
@@ -279,7 +270,6 @@
         </div>
     </form>
 
-    <!-- Thư viện Chart.js & Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
