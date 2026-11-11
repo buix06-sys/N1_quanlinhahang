@@ -1,6 +1,6 @@
 using System;
 using System.Data;
-using System.Data.SqlClient;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace N1_quanlinhahang
@@ -18,8 +18,8 @@ namespace N1_quanlinhahang
                 return;
             }
 
-            string taiKhoanHienTai = Session["TaiKhoan"]?.ToString() ?? "";
-            if (!taiKhoanHienTai.Equals("TK001", StringComparison.OrdinalIgnoreCase))
+            string taiKhoan = Session["TaiKhoan"]?.ToString() ?? "";
+            if (!taiKhoan.Equals("TK001", StringComparison.OrdinalIgnoreCase))
             {
                 Response.Redirect("Dashboard.aspx", false);
                 Context.ApplicationInstance.CompleteRequest();
@@ -36,41 +36,56 @@ namespace N1_quanlinhahang
         {
             try
             {
-                string query = "SELECT * FROM NHANVIEN";
+                string query = "SELECT manhanvien, hoten, sodienthoai, chucvu, trangthailamviec, matkhoan FROM NHANVIEN";
                 DataTable dt = db.ExecuteQuery(query);
                 gvNhanVien.DataSource = dt;
                 gvNhanVien.DataBind();
             }
             catch (Exception ex)
             {
-                HienThiThongBao("Lỗi tải dữ liệu: " + ex.Message, "danger");
+                HienThiThongBao("Lỗi tải danh sách nhân viên: " + ex.Message, "danger");
             }
         }
 
         protected void btnThem_Click(object sender, EventArgs e)
         {
-            string maNV = txtMaNV.Text.Trim();
+            string maNV = txtMaNhanVien.Text.Trim();
             string hoTen = txtHoTen.Text.Trim();
-            string gioiTinh = ddlGioiTinh.SelectedValue;
-            string sdt = txtSdt.Text.Trim();
+            string sdt = txtSoDienThoai.Text.Trim();
             string chucVu = txtChucVu.Text.Trim();
-            string maTK = txtMaTK.Text.Trim();
+            string matKhoan = txtMatKhoan.Text.Trim();
+            string trangThai = ddlTrangThai.SelectedValue;
 
             if (string.IsNullOrEmpty(maNV) || string.IsNullOrEmpty(hoTen))
             {
-                HienThiThongBao("Vui lòng nhập đầy đủ Mã Nhân Viên và Họ Tên!", "danger");
+                HienThiThongBao("Vui lòng nhập đầy đủ Mã nhân viên và Họ tên!", "danger");
                 return;
             }
 
             try
             {
-                string query = $"INSERT INTO NHANVIEN (manhanvien, hoten, gioitinh, sodienthoai, chucvu, trangthailamviec, matkhoan) " +
-                               $"VALUES ('{maNV}', N'{hoTen}', N'{gioiTinh}', '{sdt}', N'{chucVu}', N'Đang làm', '{maTK}')";
+                // 1. Tự động kiểm tra & tạo tài khoản (Đã bổ sung đầy đủ cột tennguoidung để không bị lỗi NULL)
+                if (!string.IsNullOrEmpty(matKhoan))
+                {
+                    string checkTK = $"SELECT COUNT(*) FROM TAIKHOAN WHERE matkhoan = '{matKhoan}'";
+                    DataTable dtTK = db.ExecuteQuery(checkTK);
+                    if (dtTK != null && Convert.ToInt32(dtTK.Rows[0][0]) == 0)
+                    {
+                        string insertTK = $"INSERT INTO TAIKHOAN (matkhoan, tennguoidung, matkhau, quyentruycap) VALUES ('{matKhoan}', N'{hoTen}', '123456', N'{chucVu}')";
+                        db.ExecuteNonQuery(insertTK);
+                    }
+                }
+
+                // 2. Thêm nhân viên trực tiếp trên web
+                string query = string.IsNullOrEmpty(matKhoan)
+                    ? $"INSERT INTO NHANVIEN (manhanvien, hoten, sodienthoai, chucvu, trangthailamviec, matkhoan) VALUES ('{maNV}', N'{hoTen}', '{sdt}', N'{chucVu}', N'{trangThai}', NULL)"
+                    : $"INSERT INTO NHANVIEN (manhanvien, hoten, sodienthoai, chucvu, trangthailamviec, matkhoan) VALUES ('{maNV}', N'{hoTen}', '{sdt}', N'{chucVu}', N'{trangThai}', '{matKhoan}')";
 
                 db.ExecuteNonQuery(query);
+
                 LoadData();
                 XoaForm();
-                HienThiThongBao("Thêm nhân viên thành công!", "success");
+                HienThiThongBao("Thêm nhân viên mới thành công!", "success");
             }
             catch (Exception ex)
             {
@@ -80,12 +95,12 @@ namespace N1_quanlinhahang
 
         protected void btnSua_Click(object sender, EventArgs e)
         {
-            string maNV = txtMaNV.Text.Trim();
+            string maNV = txtMaNhanVien.Text.Trim();
             string hoTen = txtHoTen.Text.Trim();
-            string gioiTinh = ddlGioiTinh.SelectedValue;
-            string sdt = txtSdt.Text.Trim();
+            string sdt = txtSoDienThoai.Text.Trim();
             string chucVu = txtChucVu.Text.Trim();
-            string maTK = txtMaTK.Text.Trim();
+            string matKhoan = txtMatKhoan.Text.Trim();
+            string trangThai = ddlTrangThai.SelectedValue;
 
             if (string.IsNullOrEmpty(maNV))
             {
@@ -95,11 +110,23 @@ namespace N1_quanlinhahang
 
             try
             {
-                string query = $"UPDATE NHANVIEN SET hoten = N'{hoTen}', gioitinh = N'{gioiTinh}', " +
-                               $"sodienthoai = '{sdt}', chucvu = N'{chucVu}', matkhoan = '{maTK}' " +
-                               $"WHERE manhanvien = '{maNV}'";
+                if (!string.IsNullOrEmpty(matKhoan))
+                {
+                    string checkTK = $"SELECT COUNT(*) FROM TAIKHOAN WHERE matkhoan = '{matKhoan}'";
+                    DataTable dtTK = db.ExecuteQuery(checkTK);
+                    if (dtTK != null && Convert.ToInt32(dtTK.Rows[0][0]) == 0)
+                    {
+                        string insertTK = $"INSERT INTO TAIKHOAN (matkhoan, tennguoidung, matkhau, quyentruycap) VALUES ('{matKhoan}', N'{hoTen}', '123456', N'{chucVu}')";
+                        db.ExecuteNonQuery(insertTK);
+                    }
+                }
+
+                string query = string.IsNullOrEmpty(matKhoan)
+                    ? $"UPDATE NHANVIEN SET hoten = N'{hoTen}', sodienthoai = '{sdt}', chucvu = N'{chucVu}', trangthailamviec = N'{trangThai}', matkhoan = NULL WHERE manhanvien = '{maNV}'"
+                    : $"UPDATE NHANVIEN SET hoten = N'{hoTen}', sodienthoai = '{sdt}', chucvu = N'{chucVu}', trangthailamviec = N'{trangThai}', matkhoan = '{matKhoan}' WHERE manhanvien = '{maNV}'";
 
                 db.ExecuteNonQuery(query);
+
                 LoadData();
                 XoaForm();
                 HienThiThongBao("Cập nhật thông tin nhân viên thành công!", "success");
@@ -112,7 +139,7 @@ namespace N1_quanlinhahang
 
         protected void btnXoa_Click(object sender, EventArgs e)
         {
-            string maNV = txtMaNV.Text.Trim();
+            string maNV = txtMaNhanVien.Text.Trim();
 
             if (string.IsNullOrEmpty(maNV))
             {
@@ -124,27 +151,33 @@ namespace N1_quanlinhahang
             {
                 string query = $"DELETE FROM NHANVIEN WHERE manhanvien = '{maNV}'";
                 db.ExecuteNonQuery(query);
+
                 LoadData();
                 XoaForm();
                 HienThiThongBao("Xóa nhân viên thành công!", "success");
             }
             catch (Exception ex)
             {
-                HienThiThongBao("Lỗi khi xóa (nhân viên có thể đang phát sinh dữ liệu liên quan): " + ex.Message, "danger");
+                HienThiThongBao("Lỗi khi xóa: " + ex.Message, "danger");
             }
         }
 
         protected void gvNhanVien_SelectedIndexChanged(object sender, EventArgs e)
         {
             GridViewRow row = gvNhanVien.SelectedRow;
-            txtMaNV.Text = row.Cells[1].Text.Trim();
-            txtHoTen.Text = row.Cells[2].Text.Trim();
-            ddlGioiTinh.SelectedValue = row.Cells[3].Text.Trim();
-            txtSdt.Text = row.Cells[4].Text.Trim();
-            txtChucVu.Text = row.Cells[5].Text.Trim();
-            txtMaTK.Text = row.Cells[7].Text.Trim();
+            txtMaNhanVien.Text = row.Cells[1].Text.Trim();
+            txtHoTen.Text = row.Cells[2].Text.Trim() == "&nbsp;" ? "" : row.Cells[2].Text.Trim();
+            txtSoDienThoai.Text = row.Cells[3].Text.Trim() == "&nbsp;" ? "" : row.Cells[3].Text.Trim();
+            txtChucVu.Text = row.Cells[4].Text.Trim() == "&nbsp;" ? "" : row.Cells[4].Text.Trim();
+            txtMatKhoan.Text = row.Cells[5].Text.Trim() == "&nbsp;" ? "" : row.Cells[5].Text.Trim();
 
-            txtMaNV.ReadOnly = true;
+            string trangThai = row.Cells[6].Text.Trim();
+            if (ddlTrangThai.Items.FindByValue(trangThai) != null)
+            {
+                ddlTrangThai.SelectedValue = trangThai;
+            }
+
+            txtMaNhanVien.ReadOnly = true;
             lblMessage.Visible = false;
         }
 
@@ -156,19 +189,19 @@ namespace N1_quanlinhahang
 
         private void XoaForm()
         {
-            txtMaNV.Text = "";
-            txtMaNV.ReadOnly = false;
+            txtMaNhanVien.Text = "";
+            txtMaNhanVien.ReadOnly = false;
             txtHoTen.Text = "";
-            txtSdt.Text = "";
+            txtSoDienThoai.Text = "";
             txtChucVu.Text = "";
-            txtMaTK.Text = "";
-            if (ddlGioiTinh.Items.Count > 0) ddlGioiTinh.SelectedIndex = 0;
+            txtMatKhoan.Text = "";
+            if (ddlTrangThai.Items.Count > 0) ddlTrangThai.SelectedIndex = 0;
         }
 
         private void HienThiThongBao(string msg, string type)
         {
             lblMessage.Visible = true;
-            lblMessage.CssClass = $"alert alert-{type} d-block py-2";
+            lblMessage.CssClass = "alert alert-" + type + " d-block py-2";
             lblMessage.Text = msg;
         }
 
