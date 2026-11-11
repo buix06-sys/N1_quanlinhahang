@@ -18,7 +18,6 @@ namespace N1_quanlinhahang
                 return;
             }
 
-            // BẢO MẬT TUYỆT ĐỐI: Chỉ duy nhất TK001 mới được truy cập trang này
             string taiKhoanHienTai = Session["TaiKhoan"]?.ToString() ?? "";
             if (!taiKhoanHienTai.Equals("TK001", StringComparison.OrdinalIgnoreCase))
             {
@@ -145,7 +144,6 @@ namespace N1_quanlinhahang
             txtChucVu.Text = row.Cells[5].Text.Trim();
             txtMaTK.Text = row.Cells[7].Text.Trim();
 
-            // Khóa mã nhân viên khi sửa để tránh lỗi khóa chính
             txtMaNV.ReadOnly = true;
             lblMessage.Visible = false;
         }
