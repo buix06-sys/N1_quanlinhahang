@@ -1,11 +1,11 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuanLyKho.aspx.cs" Inherits="N1_quanlinhahang.QuanLyKho" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuanLyDonHang.aspx.cs" Inherits="N1_quanlinhahang.QuanLyDonHang" %>
 
 <!DOCTYPE html>
 <html lang="vi">
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Quản Lý Kho - Nhà Hàng N1</title>
+    <title>Quản Lý Đơn Hàng & Thanh Toán - Nhà Hàng N1</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
@@ -37,36 +37,70 @@
                 <li class="nav-item"><a class="nav-link" href="QuanLyDatBan.aspx"><i class="fa-solid fa-calendar-check"></i> Quản lý đặt bàn</a></li>
                 <li class="nav-item"><a class="nav-link" href="QuanLyMonAn.aspx"><i class="fa-solid fa-burger"></i> Quản lý món ăn</a></li>
                 <li class="nav-item"><a class="nav-link" href="QuanLyBanAn.aspx"><i class="fa-solid fa-chair"></i> Quản lý bàn ăn</a></li>
-                <li class="nav-item"><a class="nav-link" href="QuanLyDonHang.aspx"><i class="fa-solid fa-receipt"></i> Đơn hàng & Hóa đơn</a></li>
-                <li class="nav-item"><a class="nav-link active" href="QuanLyKho.aspx"><i class="fa-solid fa-warehouse"></i> Quản lý kho</a></li>
+                <li class="nav-item"><a class="nav-link active" href="QuanLyDonHang.aspx"><i class="fa-solid fa-receipt"></i> Đơn hàng & Thanh toán</a></li>
+                <li class="nav-item"><a class="nav-link" href="QuanLyKho.aspx"><i class="fa-solid fa-warehouse"></i> Quản lý kho</a></li>
             </ul>
         </div>
         <main class="main-content">
-            <h3 class="fw-bold text-white mb-4"><i class="fa-solid fa-warehouse text-warning me-2"></i> Quản Lý Kho & Nguyên Liệu</h3>
+            <h3 class="fw-bold text-white mb-4"><i class="fa-solid fa-receipt text-warning me-2"></i> Quản Lý Đơn Hàng & Thanh Toán</h3>
             <asp:Label ID="lblMessage" runat="server" Visible="false" CssClass="alert alert-info d-block py-2"></asp:Label>
             
             <div class="custom-card mb-4">
-                <h5 class="fw-bold mb-3 text-warning"><i class="fa-solid fa-plus-circle me-2"></i> Thêm / Cập Nhật Nguyên Liệu</h5>
+                <h5 class="fw-bold mb-3 text-warning"><i class="fa-solid fa-pen-to-square me-2"></i> Thêm / Sửa / Xóa Đơn Hàng</h5>
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold">Mã Nguyên Liệu</label>
-                        <asp:TextBox ID="txtMaNL" runat="server" CssClass="form-control" placeholder="VD: NL001"></asp:TextBox>
+                        <label class="form-label small fw-bold">Mã Đơn Hàng</label>
+                        <asp:TextBox ID="txtMaDH" runat="server" CssClass="form-control" placeholder="VD: DH001"></asp:TextBox>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold">Tên Nguyên Liệu</label>
-                        <asp:TextBox ID="txtTenNL" runat="server" CssClass="form-control" placeholder="Nhập tên nguyên liệu..."></asp:TextBox>
+                        <label class="form-label small fw-bold">Mã Đặt Bàn</label>
+                        <asp:TextBox ID="txtMaDatBan" runat="server" CssClass="form-control" placeholder="Nhập mã đặt bàn..."></asp:TextBox>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">Mã Nhân Viên</label>
+                        <asp:TextBox ID="txtMaNhanVien" runat="server" CssClass="form-control" placeholder="Nhập mã nhân viên..."></asp:TextBox>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">Mã Khách Hàng</label>
+                        <asp:TextBox ID="txtMaKhachHang" runat="server" CssClass="form-control" placeholder="Nhập mã khách hàng..."></asp:TextBox>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label small fw-bold">Ghi Chú</label>
+                        <asp:TextBox ID="txtGhiChu" runat="server" CssClass="form-control" placeholder="Nhập ghi chú..."></asp:TextBox>
                     </div>
                 </div>
                 <div class="mt-4 d-flex gap-2">
-                    <asp:Button ID="btnThem" runat="server" Text="Thêm Nguyên Liệu" CssClass="btn btn-warning fw-bold px-4 text-dark" OnClick="btnThem_Click" />
+                    <asp:Button ID="btnThem" runat="server" Text="Thêm" CssClass="btn btn-warning fw-bold px-4 text-dark" OnClick="btnThem_Click" />
+                    <asp:Button ID="btnSua" runat="server" Text="Sửa" CssClass="btn btn-primary px-4" OnClick="btnSua_Click" />
+                    <asp:Button ID="btnXoa" runat="server" Text="Xóa" CssClass="btn btn-danger px-4" OnClick="btnXoa_Click" OnClientClick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');" />
                     <asp:Button ID="btnLamMoi" runat="server" Text="Làm Mới" CssClass="btn btn-secondary px-4" OnClick="btnLamMoi_Click" />
                 </div>
             </div>
 
             <div class="custom-card">
-                <h5 class="fw-bold mb-3 text-info"><i class="fa-solid fa-table-list me-2"></i> Danh Sách Kho Nguyên Liệu</h5>
+                <h5 class="fw-bold mb-3 text-info"><i class="fa-solid fa-table-list me-2"></i> Danh Sách Đơn Hàng & Thanh Toán <span class="small text-muted" style="font-size: 0.8rem;">(💡 Click chữ **Chọn** ở cột thao tác để đưa dữ liệu lên form sửa)</span></h5>
                 <div class="table-responsive">
-                    <asp:GridView ID="gvKho" runat="server" CssClass="table table-dark table-striped table-bordered table-dark-custom text-center" AutoGenerateColumns="true">
+                    <asp:GridView ID="gvDonHang" runat="server" CssClass="table table-dark table-striped table-bordered table-dark-custom text-center" AutoGenerateColumns="False" OnRowCommand="gvDonHang_RowCommand">
+                        <Columns>
+                            <asp:TemplateField HeaderText="Mã Đơn Hàng">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnkThanhToan" runat="server" CommandName="XacNhanThanhToan" CommandArgument='<%# Eval("madonhang") %>' CssClass="text-warning fw-bold text-decoration-underline" ToolTip="Nhấn vào để xác nhận thanh toán" OnClientClick="return confirm('Bạn có muốn XÁC NHẬN THANH TOÁN cho đơn hàng này không?');">
+                                        <%# Eval("madonhang") %>
+                                    </asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="ngaydonhang" HeaderText="Ngày Đơn Hàng" DataFormatString="{0:dd/MM/yyyy HH:mm:ss}" />
+                            <asp:BoundField DataField="trangthaidonhang" HeaderText="Trạng Thái" />
+                            <asp:BoundField DataField="ghichu" HeaderText="Ghi Chú" />
+                            <asp:BoundField DataField="manhanvien" HeaderText="Mã Nhân Viên" />
+                            <asp:BoundField DataField="makhachhang" HeaderText="Mã Khách Hàng" />
+                            <asp:BoundField DataField="madatban" HeaderText="Mã Đặt Bàn" />
+                            <asp:TemplateField HeaderText="Thao Tác">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnkChonSua" runat="server" CommandName="ChonSua" CommandArgument='<%# Eval("madonhang") %>' CssClass="text-info fw-bold text-decoration-underline">Chọn</asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
                     </asp:GridView>
                 </div>
             </div>
