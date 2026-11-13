@@ -1,99 +1,43 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="N1_quanlinhahang.Login" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="N1_quanlinhahang.Login" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head runat="server">
     <meta charset="utf-8" />
-    <title>Đăng Nhập - Quản Lý Nhà Hàng N1</title>
-    <!-- Bootstrap 4 CSS CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <title>Đăng Nhập - Hệ Thống Quản Lý Nhà Hàng N1</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
     <style>
-        body {
-            background-color: #12151e;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .login-card {
-            width: 420px;
-            background-color: #1e222d;
-            border: 1px solid #2d3748;
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            color: #fff;
-            text-align: center;
-        }
-        .login-card .icon-box {
-            font-size: 2.5rem;
-            color: #fbbf24;
-            margin-bottom: 15px;
-        }
-        .form-control {
-            background-color: #12151e;
-            border: 1px solid #2d3748;
-            color: #fff;
-            height: 45px;
-        }
-        .form-control:focus {
-            background-color: #12151e;
-            color: #fff;
-            border-color: #fbbf24;
-            box-shadow: none;
-        }
-        .input-group-text {
-            background-color: #12151e;
-            border: 1px solid #2d3748;
-            color: #a0aec0;
-        }
-        .btn-login {
-            background-color: #ffbf00;
-            border: none;
-            color: #12151e;
-            font-weight: bold;
-            height: 45px;
-            transition: 0.2s;
-        }
-        .btn-login:hover {
-            background-color: #e0a800;
-        }
+        body { background-color: #12161f; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { background-color: #1e222d; border: 1px solid #2d3748; }
+        .form-control { background-color: #12161f; border: 1px solid #2d3748; color: #fff; }
+        .form-control:focus { background-color: #12161f; border-color: #ffc107; color: #fff; box-shadow: none; }
     </style>
 </head>
 <body>
-    <form id="form1" runat="server" class="w-100 d-flex justify-content-center">
-        <div class="login-card">
-            <div class="icon-box">
-                <i class="fas fa-utensils"></i>
-            </div>
-            <h3 class="font-weight-bold mb-1">NHÀ HÀNG N1</h3>
-            <p class="text-muted small mb-4">Đăng nhập hệ thống quản lý</p>
-
-            <div class="form-group text-left">
-                <label class="small text-muted">Tài khoản</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+    <form id="form1" runat="server">
+        <div class="container d-flex align-items-center justify-content-center min-vh-100">
+            <div class="col-md-4">
+                <div class="card p-4 shadow-lg rounded">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-utensils fa-3x text-warning mb-2"></i>
+                        <h4 class="font-weight-bold text-white">NHÀ HÀNG N1</h4>
+                        <span class="text-muted small">Đăng nhập hệ thống quản lý</span>
                     </div>
-                    <asp:TextBox ID="txtUser" runat="server" CssClass="form-control" placeholder="Nhập mã tài khoản..."></asp:TextBox>
+                    
+                    <div class="form-group">
+                        <label class="small text-muted font-weight-bold"><i class="fas fa-user mr-1"></i> Tài khoản</label>
+                        <asp:TextBox ID="txtTaiKhoan" runat="server" CssClass="form-control" Placeholder=""></asp:TextBox>
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label class="small text-muted font-weight-bold"><i class="fas fa-lock mr-1"></i> Mật khẩu</label>
+                        <asp:TextBox ID="txtMatKhau" runat="server" TextMode="Password" CssClass="form-control" Placeholder="Nhập mật khẩu"></asp:TextBox>
+                    </div>
+
+                    <asp:Button ID="btnDangNhap" runat="server" Text="Đăng Nhập" CssClass="btn btn-warning btn-block font-weight-bold py-2" OnClick="btnDangNhap_Click" />
                 </div>
             </div>
-
-            <div class="form-group text-left">
-                <label class="small text-muted">Mật khẩu</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    </div>
-                    <asp:TextBox ID="txtPass" runat="server" CssClass="form-control" TextMode="Password" placeholder="Nhập mật khẩu..."></asp:TextBox>
-                </div>
-            </div>
-
-            <asp:Button ID="btnLogin" runat="server" Text="ĐĂNG NHẬP" CssClass="btn btn-login btn-block font-weight-bold mt-4" OnClick="btnLogin_Click" />
-            
-            <asp:Label ID="lblErr" runat="server" CssClass="text-danger small mt-3 d-block" Text=""></asp:Label>
         </div>
     </form>
 </body>
