@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Quản Lý Đơn Hàng & Hóa Đơn" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="QuanLyDonHang.aspx.cs" Inherits="N1_quanlinhahang.QuanLyDonHang" %>
+<%@ Page Title="Quản Lý Đơn Hàng & Hóa Đơn" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="QuanLyDonHang.aspx.cs" Inherits="N1_quanlinhahang.QuanLyDonHang" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h3 class="mb-4 font-weight-bold text-white"><i class="fas fa-file-invoice-dollar text-warning mr-2"></i> Quản Lý Đơn Hàng & Thanh Toán Hóa Đơn</h3>
 
