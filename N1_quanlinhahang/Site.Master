@@ -1,0 +1,140 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="N1_quanlinhahang.Site" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta charset="utf-8" />
+    <title>Hệ Thống Quản Lý Nhà Hàng</title>
+    <!-- Bootstrap 4 CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- FontAwesome cho Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    
+    <style>
+        body {
+            background-color: #12151e;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* Sidebar bên trái */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 250px;
+            background-color: #181c29;
+            border-right: 1px solid #2d3748;
+            padding-top: 20px;
+            z-index: 100;
+        }
+        .sidebar .brand {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+        .sidebar .nav-link {
+            color: #a0aec0;
+            padding: 12px 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: #ffffff;
+            background-color: #ff8c00;
+            border-radius: 4px;
+            margin: 0 10px;
+        }
+        .sidebar .nav-section {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #718096;
+            padding: 15px 20px 5px 20px;
+            letter-spacing: 1px;
+        }
+        /* Vùng nội dung chính bên phải */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        /* Card tùy chỉnh giao diện tối */
+        .card {
+            background-color: #1e222d;
+            border: 1px solid #2d3748;
+            color: #fff;
+            border-radius: 8px;
+        }
+        .form-control {
+            background-color: #12151e;
+            border: 1px solid #2d3748;
+            color: #fff;
+        }
+        .form-control:focus {
+            background-color: #12151e;
+            color: #fff;
+            border-color: #ff8c00;
+            box-shadow: none;
+        }
+        /* Bảng dữ liệu */
+        .table {
+            color: #e2e8f0;
+        }
+        .table th, .table td {
+            border-color: #2d3748;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #2a303c;
+            color: #fff;
+        }
+    </style>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <!-- SIDEBAR MENU -->
+        <div class="sidebar">
+            <div class="brand mb-3">
+                <i class="fas fa-utensils"></i> N1 - NHÀ HÀNG
+            </div>
+            <div class="nav-section">Tổng quan</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="Dashboard.aspx"><i class="fas fa-chart-pie mr-2"></i> Bảng điều khiển</a>
+                </li>
+            </ul>
+            <div class="nav-section">Quản trị hệ thống</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="QuanLyNhanVien.aspx"><i class="fas fa-users mr-2"></i> Quản lý nhân viên</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="QuanLyDatBan.aspx"><i class="fas fa-calendar-alt mr-2"></i> Quản lý đặt bàn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="QuanLyMonAn.aspx"><i class="fas fa-hamburger mr-2"></i> Quản lý món ăn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="QuanLyBanAn.aspx"><i class="fas fa-chair mr-2"></i> Quản lý bàn ăn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="QuanLyDonHang.aspx"><i class="fas fa-file-invoice-dollar mr-2"></i> Đơn hàng & Hóa đơn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="QuanLyKho.aspx"><i class="fas fa-boxes mr-2"></i> Quản lý kho</a>
+                </li>
+            </ul>
+            <div class="mt-4 px-3">
+                <a href="Login.aspx" class="text-danger text-decoration-none"><i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất</a>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="main-content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html> 
