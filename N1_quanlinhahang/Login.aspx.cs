@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 
 namespace N1_quanlinhahang
@@ -7,23 +7,43 @@ namespace N1_quanlinhahang
     {
         KetNoiCSDL db = new KetNoiCSDL();
 
-        protected void btnLogin_Click(object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
-            string maTK = txtUser.Text.Trim(); // Nhập vào: TK001, TK002 hoặc TK003
-            string pass = txtPass.Text.Trim(); // Nhập vào: 123456
+        }
 
-            // Truy vấn trực tiếp bằng mã tài khoản và mật khẩu (tránh lỗi font tiếng Việt)
-            string sql = $"SELECT * FROM TAIKHOAN WHERE matkhoan = '{maTK}' AND matkhau = '{pass}'";
-            DataTable dt = db.LayDuLieu(sql);
-
-            if (dt.Rows.Count > 0)
+        protected void btnDangNhap_Click(object sender, EventArgs e)
+        {
+            try
             {
-                // Đăng nhập thành công
-                Response.Redirect("Dashboard.aspx");
+                string tk = txtTaiKhoan.Text.Trim();
+                string mk = txtMatKhau.Text.Trim();
+
+                if (string.IsNullOrEmpty(tk) || string.IsNullOrEmpty(mk))
+                {
+                    Response.Write("<script>alert('Vui lòng nhập đầy đủ tài khoản và mật khẩu!');</script>");
+                    return;
+                }
+
+                // Kiểm tra dựa trên dữ liệu bảng TAIKHOAN trong CSDL QL_NhaHang_Moi
+                string query = $"SELECT * FROM TAIKHOAN WHERE (matkhoan = '{tk}' OR tennguoidung = N'{tk}') AND matkhau = '{mk}'";
+                DataTable dt = db.LayDuLieu(query);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    Session["TaiKhoan"] = dt.Rows[0]["matkhoan"].ToString();
+                    Session["TenNguoiDung"] = dt.Rows[0]["tennguoidung"].ToString();
+                    Session["QuyenTruyCap"] = dt.Rows[0]["quyentruycap"].ToString();
+
+                    Response.Redirect("Dashboard.aspx");
+                }
+                else
+                {
+                    Response.Write("<script>alert('Tài khoản hoặc mật khẩu không chính xác!');</script>");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                lblErr.Text = "Mã tài khoản hoặc mật khẩu không chính xác!";
+                Response.Write("<script>alert('Lỗi đăng nhập: " + ex.Message.Replace("'", "\\'") + "');</script>");
             }
         }
     }
