@@ -20,7 +20,6 @@ namespace N1_quanlinhahang
 
         protected void btnThem_Click(object sender, EventArgs e)
         {
-        
             try
             {
                 string mamon = txtMaMon.Text.Trim();
