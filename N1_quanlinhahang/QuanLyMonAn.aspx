@@ -13,12 +13,15 @@
             <div class="col-md-3 mb-2">
                 <asp:TextBox ID="txtTenMon" runat="server" CssClass="form-control" Placeholder="Tên Món Ăn"></asp:TextBox>
             </div>
+
             <div class="col-md-2 mb-2">
                 <asp:TextBox ID="txtDonGia" runat="server" CssClass="form-control" Placeholder="Đơn Giá"></asp:TextBox>
             </div>
+
             <div class="col-md-2 mb-2">
                 <asp:TextBox ID="txtMaDM" runat="server" CssClass="form-control" Placeholder="Mã Danh Mục (DM01)"></asp:TextBox>
             </div>
+
             <div class="col-md-3 mb-2">
                 <asp:Button ID="btnThem" runat="server" Text="Thêm Món" CssClass="btn btn-warning btn-block font-weight-bold" OnClick="btnThem_Click" />
             </div>
