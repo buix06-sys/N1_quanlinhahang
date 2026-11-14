@@ -9,6 +9,7 @@
             <div class="col-md-2 mb-2">
                 <asp:TextBox ID="txtMaMon" runat="server" CssClass="form-control" Placeholder="Mã Món (MA007)"></asp:TextBox>
             </div>
+
             <div class="col-md-3 mb-2">
                 <asp:TextBox ID="txtTenMon" runat="server" CssClass="form-control" Placeholder="Tên Món Ăn"></asp:TextBox>
             </div>
