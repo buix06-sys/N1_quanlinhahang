@@ -11,6 +11,7 @@
             <div class="col-md-2 mb-2">
                 <asp:TextBox ID="txtSoHang" runat="server" CssClass="form-control" Placeholder="Số Hàng"></asp:TextBox>
             </div>
+
             <div class="col-md-2 mb-2">
                 <asp:TextBox ID="txtSoCot" runat="server" CssClass="form-control" Placeholder="Số Cột"></asp:TextBox>
             </div>
