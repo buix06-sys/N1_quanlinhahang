@@ -13,7 +13,6 @@ namespace N1_quanlinhahang
         }
 
         
-
         void LoadData()
         {
             gvBanAn.DataSource = db.LayDuLieu("SELECT * FROM BANAN");
