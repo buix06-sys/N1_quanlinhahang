@@ -87,6 +87,7 @@ namespace N1_quanlinhahang
                 db.ThucThiNonQuery($"DELETE FROM BANAN WHERE maban='{maBan}'");
                 LoadData();
             }
+            
             catch
             {
                 Response.Write("<script>alert('Không thể xóa bàn này vì đang bị ràng buộc dữ liệu!');</script>");
