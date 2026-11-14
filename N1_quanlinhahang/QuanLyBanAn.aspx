@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Quản Lý Bàn Ăn" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="QuanLyBanAn.aspx.cs" Inherits="N1_quanlinhahang.QuanLyBanAn" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h3 class="mb-4 font-weight-bold text-white"><i class="fas fa-chair text-warning mr-2"></i> Quản Lý Sơ Đồ Bàn Ăn</h3>
-
+  
     <div class="card p-4 mb-4 shadow-sm">
         <h5 class="text-warning mb-3">Thêm Bàn Ăn Mới</h5>
         <div class="form-row">
