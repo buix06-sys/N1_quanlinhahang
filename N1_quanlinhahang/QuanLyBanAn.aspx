@@ -19,6 +19,7 @@
             <div class="col-md-3 mb-2">
                 <asp:TextBox ID="txtViTri" runat="server" CssClass="form-control" Placeholder="Vị Trí (VD: Tầng 1)"></asp:TextBox>
             </div>
+
             <div class="col-md-3 mb-2">
                 <asp:Button ID="btnThem" runat="server" Text="Thêm Mới" CssClass="btn btn-warning btn-block font-weight-bold" OnClick="btnThem_Click" />
             </div>
