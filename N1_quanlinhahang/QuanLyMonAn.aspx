@@ -2,7 +2,6 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h3 class="mb-4 font-weight-bold text-white"><i class="fas fa-hamburger text-warning mr-2"></i> Quản Lý Thực Đơn Món Ăn</h3>
 
-    
 <div class="card p-4 mb-4 shadow-sm">
         <h5 class="text-warning mb-3">Thêm Món Ăn Mới</h5>
         <div class="form-row">
