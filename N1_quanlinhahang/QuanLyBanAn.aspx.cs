@@ -38,6 +38,7 @@ namespace N1_quanlinhahang
                 txtMaBan.Text = ""; txtSoHang.Text = ""; txtSoCot.Text = ""; txtViTri.Text = "";
                 LoadData();
             }
+            
             catch (Exception ex)
             {
                 Response.Write("<script>alert('Lỗi thêm dữ liệu: " + ex.Message + "');</script>");
