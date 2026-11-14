@@ -22,6 +22,7 @@ namespace N1_quanlinhahang
 
         protected void btnThem_Click(object sender, EventArgs e)
         {
+        
             try
             {
                 string maban = txtMaBan.Text.Trim();
